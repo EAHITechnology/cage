@@ -1,0 +1,36 @@
+#以下是业务自定义的conf区
+test1 = "test1"
+
+#以下是组件配置区
+[[database]]
+name="cage-mysql"
+database="cage"
+charset="utf8"
+parseTime="true"
+loc="Local"
+readTimeout="2s"
+maxIdleConns = 2
+maxOpenConns = 5
+connMaxIdletime = 600
+log_model = true
+[database.master]
+ip="127.0.0.1:3306"
+username="root"
+password="xxxxxx"
+[[database.slaves]]
+ip="127.0.0.1:3306"
+username="root"
+password="xxxxxx"
+
+[[redis]]
+name="cage-redis"
+addr="100.xxx.xxx.xxx:xxxx"
+max_idle=5
+max_idletimeout=300
+max_active=100
+read_timeout=500
+write_timeout=500
+slow_time=500
+connect_time=500
+wait=true
+databases=0
