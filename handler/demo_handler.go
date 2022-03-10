@@ -12,6 +12,7 @@ import (
 func TestHandler(c *enet.Context) {
 	fun := "TestHandler --> "
 	ctx := c.Request.Context()
+
 	req := proto.DemoRequest{}
 	resp := proto.DemoResp{
 		Data: proto.DemoRespData{},

@@ -1,7 +1,11 @@
 package manager
 
 import (
+	"encoding/json"
+
 	"github.com/EAHITechnology/raptor/elog"
+	"github.com/EAHITechnology/raptor/erpc"
+	"golang.org/x/net/context"
 )
 
 type xxSdkManager struct{}
@@ -19,5 +23,22 @@ func NewXxSdkManager() *xxSdkManager {
 func (x *xxSdkManager) Call(id int64) error {
 	fun := "Call -->"
 	elog.Elog.Debugf("%s id:%d", fun, id)
+	client, err := erpc.HttpManager.GetClient("cage1")
+	if err != nil {
+		return err
+	}
+
+	resp, err := client.Send(context.Background(), erpc.GET, nil, "/test", nil, nil, nil)
+	if err != nil {
+		return err
+	}
+
+	r := DemoResp{}
+	if err := json.Unmarshal(resp, &r); err != nil {
+		return err
+	}
+
+	elog.Elog.Debugf("%s code:%d msg:%s id:%d", fun, r.Code, r.Msg, r.Data.Id)
+
 	return nil
 }

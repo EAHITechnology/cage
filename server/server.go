@@ -13,8 +13,9 @@ func InitServer(ctx context.Context) error {
 	logGroup := enet.HttpWeb.NewGroup("/demo")
 	logGroup.Get("/test_0", handler.TestHandler)
 	logGroup.Post("/test_1", authMiddle, handler.TestHandler)
+
 	// handler
-	enet.HttpWeb.Get("/test_2", handler.TestHandler)
+	enet.HttpWeb.Get("/test", handler.TestHandler)
 
 	//========业务初始化区========
 	go logic.InitBackend(ctx)

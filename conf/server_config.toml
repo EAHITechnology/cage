@@ -2,7 +2,7 @@
 [server]
 #服务名称
 service_name="cage"
-http_port="0.0.0.0:1234"
+http_port="0.0.0.0:9090"
 
 [log]
   dir="./log"

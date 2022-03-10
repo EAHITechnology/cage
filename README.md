@@ -1,6 +1,9 @@
 # cage
 ## Cage the raptor
-Simple hierarchical architecture file directory example
+
+Cage is a scaffolding template.cage is combined with [owen](https://github.com/EAHITechnology/owen) to generate a complete, runnable program (You can also pull the code and use it by yourself :). Cage adopts a layered architecture design pattern, which keeps it separate from the base library. We can get a framework that only focuses on business logic.
+
+Simple hierarchical architecture file directory example:
 
 ```
 .
@@ -12,8 +15,6 @@ Simple hierarchical architecture file directory example
 │   ├── demo_task.go
 │   ├── lock.go
 │   └── model.go
-├── go.mod
-├── go.sum
 ├── handler                     # routing layer
 │   └── demo_handler.go
 ├── logic                       # logic layer
