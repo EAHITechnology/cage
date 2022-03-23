@@ -2,6 +2,22 @@ package dao
 
 import "github.com/EAHITechnology/raptor/eredis"
 
+func Set(key string, value interface{}) error {
+	rds, err := eredis.GetClient("cage-redis")
+	if err != nil {
+		return err
+	}
+	return rds.Set(key, value)
+}
+
+func Get(key string) (string, error) {
+	rds, err := eredis.GetClient("cage-redis")
+	if err != nil {
+		return "", err
+	}
+	return rds.GetString(key)
+}
+
 func SetRedisLock(key string, ex int64) (int64, bool, error) {
 	rds, err := eredis.GetClient("cage-redis")
 	if err != nil {

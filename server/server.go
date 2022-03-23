@@ -11,16 +11,16 @@ import (
 func InitServer(ctx context.Context) error {
 	// group handler
 	logGroup := enet.HttpWeb.NewGroup("/demo")
-	logGroup.Get("/test_0", handler.TestHandler)
-	logGroup.Post("/test_1", authMiddle, handler.TestHandler)
+	logGroup.Get("/gettest", handler.TestGetHandler)
+	logGroup.Post("/posttest", authMiddle, handler.TestPostHandler)
 
 	// handler
-	enet.HttpWeb.Get("/test", handler.TestHandler)
+	enet.HttpWeb.Get("/get_test", handler.TestGetHandler)
 
-	//========业务初始化区========
-	go logic.InitBackend(ctx)
-
-	//===========end============
 	go enet.HttpWeb.Run()
 	return nil
+}
+
+func InitBackend(ctx context.Context) {
+	go logic.InitBackend(ctx)
 }

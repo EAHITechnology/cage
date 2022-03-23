@@ -7,12 +7,15 @@ http_port="0.0.0.0:9090"
 [log]
   dir="./log"
   log_level="DEBUG"
+  #Format="json"
   prefix="cage"
+  depth=1
   auto_clear_hours=24
 
 #通过配置中心加载配置文件
 [config_center]
 # file_path,etcd_addr,apollo_addr 三个配置一个即可
+file_type  = "toml"
 file_path = "./conf/config.toml"
 #etcd_addr = ["xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx"]
 #apollo_addr = "xxx.xxx.xxx.xxx:xxx"

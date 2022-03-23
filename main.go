@@ -1,19 +1,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
 
-	"github.com/EAHITechnology/cage/server"
+	logicServer "github.com/EAHITechnology/cage/server"
 	"github.com/EAHITechnology/cage/utils"
 	"github.com/EAHITechnology/raptor/config"
 	"github.com/EAHITechnology/raptor/elog"
-	"github.com/EAHITechnology/raptor/enet"
-
-	"golang.org/x/net/context"
+	"github.com/EAHITechnology/raptor/server"
 )
 
 var (
@@ -23,47 +19,39 @@ var (
 func main() {
 	flag.Parse()
 
-	t, err := config.NewConfigParser(config.TomlConfigParserType)
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+
+	s, err := server.NewServer(ctx, "", *configFilePath)
 	if err != nil {
-		fmt.Println("NewConfigParser err:", err)
-		os.Exit(0)
+		fmt.Println("NewServer err:", err.Error())
+		return
 	}
 
-	if err := t.Read(*configFilePath); err != nil {
-		fmt.Println("read err:", err)
-		os.Exit(0)
-	}
-
-	ctx, cancel := context.WithCancel(context.Background())
-	if err := t.InitConfig(ctx); err != nil {
-		fmt.Println("InitConfig err:", err)
-		os.Exit(0)
-	}
-
-	if err := t.Unmarshal(&utils.Config); err != nil {
-		fmt.Println("Unmarshal err:", err)
-		os.Exit(0)
-	}
-
-	if err := server.InitServer(ctx); err != nil {
-		fmt.Println("InitServer err:", err)
-		os.Exit(0)
-	}
-
-	sc := make(chan os.Signal, 1)
-	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGPIPE, syscall.SIGUSR1)
-	for {
-		sig := <-sc
-		if sig == syscall.SIGINT || sig == syscall.SIGTERM || sig == syscall.SIGQUIT {
-			elog.Elog.Warnf("get os signal, close server signal: %s", sig.String())
-			if enet.HttpWeb != nil {
-				enet.HttpWeb.Close()
-			}
-			cancel()
-			break
-		} else {
-			elog.Elog.Warnf("ignore os signal: %s", sig.String())
+	// injection lazy loading function
+	InitConfigFunc := func(ctx context.Context, config config.ConfigParser) {
+		if err := config.Unmarshal(&utils.Config); err != nil {
+			elog.Elog.Errorf("config Unmarshal err:", err.Error())
+			return
 		}
 	}
 
+	InitServerFunc := func(ctx context.Context, config config.ConfigParser) {
+		if err := logicServer.InitServer(ctx); err != nil {
+			elog.Elog.Errorf("InitServer err:", err.Error())
+			return
+		}
+		elog.Elog.Info("InitServer success")
+	}
+
+	InitBackend := func(ctx context.Context, config config.ConfigParser) {
+		logicServer.InitBackend(ctx)
+	}
+
+	s.AfterInit(InitConfigFunc, InitServerFunc, InitBackend)
+
+	if err := s.Run(ctx, cancel); err != nil {
+		fmt.Println("NewServer err:", err.Error())
+		return
+	}
 }

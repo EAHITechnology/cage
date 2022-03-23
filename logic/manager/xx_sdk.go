@@ -22,8 +22,8 @@ func NewXxSdkManager() *xxSdkManager {
 
 func (x *xxSdkManager) Call(id int64) error {
 	fun := "Call -->"
-	elog.Elog.Debugf("%s id:%d", fun, id)
-	client, err := erpc.HttpManager.GetClient("cage1")
+
+	client, err := erpc.HttpManager.GetClient("cage_downstream")
 	if err != nil {
 		return err
 	}
@@ -38,7 +38,7 @@ func (x *xxSdkManager) Call(id int64) error {
 		return err
 	}
 
-	elog.Elog.Debugf("%s code:%d msg:%s id:%d", fun, r.Code, r.Msg, r.Data.Id)
+	elog.Elog.Debugf("%s code:%d msg:%s", fun, r.Code, r.Msg)
 
 	return nil
 }

@@ -2,9 +2,15 @@
 test1 = "test1"
 
 #以下是组件配置区
+[service_discovery]
+# etcd_addr,zk_addr,custom_service_discovery choose one of three or none at all
+#etcd_addr=["xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx"]
+#zk_addr=["xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx"]
+#custom_service_discovery=["xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx","xxx.xxx.xxx.xxx:xxx"]
+
 [[database]]
 name="cage-mysql"
-database="cage"
+database="test"
 charset="utf8"
 parseTime="true"
 loc="Local"
@@ -16,15 +22,15 @@ log_model = true
 [database.master]
 ip="127.0.0.1:3306"
 username="root"
-password="xxxxxx"
+password="houyun1996"
 [[database.slaves]]
 ip="127.0.0.1:3306"
 username="root"
-password="xxxxxx"
+password="houyun1996"
 
 [[redis]]
 name="cage-redis"
-addr="100.xxx.xxx.xxx:xxxx"
+addr="127.0.0.1:6379"
 max_idle=5
 max_idletimeout=300
 max_active=100
@@ -36,9 +42,9 @@ wait=true
 databases=0
 
 [[rpc_server_client]]
-service_name="cage1"
+service_name="cage_downstream"
 proto="http"
-endpoints_from="list"
+endpoints_from="file"
 addr=["127.0.0.1:9091","127.0.0.1:9092","127.0.0.1:9093"]
 wight=[1,2,3]
 balancetype="random"

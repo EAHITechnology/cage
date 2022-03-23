@@ -11,7 +11,7 @@ func InsertDemoTask(d DemoModel) (int64, error) {
 		return 0, err
 	}
 
-	if err := client.GetMaster().Table("cage_task").Create(&d).Error; err != nil {
+	if err := client.GetMaster().Table("demo_task").Create(&d).Error; err != nil {
 		return 0, err
 	}
 
@@ -25,7 +25,7 @@ func GetOneDemoInfo(id int64) (*DemoModel, error) {
 	}
 
 	d := &DemoModel{}
-	if err := client.GetMaster().Table("cage_task").Where("id = ?", id).Find(d).Error; err != nil {
+	if err := client.GetMaster().Table("demo_task").Where("id = ?", id).Find(d).Error; err != nil {
 		if gorm.IsRecordNotFoundError(err) {
 			return nil, nil
 		}
@@ -44,7 +44,7 @@ func UpdateOneDemoInfo(d *DemoModel) (int64, error) {
 	data["info"] = d.Info
 
 	db := client.GetMaster()
-	if err := db.Debug().Table("cage_task").
+	if err := db.Debug().Table("demo_task").
 		Model(&DemoModel{}).
 		Where("id = ?", d.Id).
 		Updates(data).Error; err != nil {
